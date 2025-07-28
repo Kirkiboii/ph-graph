@@ -5,6 +5,7 @@ use crossterm::execute;
 use crossterm::terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen};
 use ratatui::prelude::{CrosstermBackend, Terminal};
 use ratatui::widgets::{Block, Borders, Paragraph};
+use std::f64::consts::PI;
 
 struct App {
     last_pulse_time: Instant,
@@ -29,7 +30,7 @@ impl App {
         }
 
         if self.pulse_active {
-            self.pulse_position += 0.05; // Adjust for speed
+            self.pulse_position += 0.025; // Adjust for speed (twice as slow)
             if self.pulse_position >= 1.0 {
                 self.pulse_active = false;
             }
@@ -85,13 +86,14 @@ fn run_app(terminal: &mut Terminal<CrosstermBackend<io::Stdout>>, app: &mut App)
 fn ui(f: &mut ratatui::Frame, app: &App) {
     let size = f.size();
     let block = Block::default().borders(Borders::ALL).title("Flowing Pulse");
+    let inner_rect = block.inner(size); // Get the inner area of the block
     f.render_widget(block, size);
 
-    let line_width = (size.width as f64 * 0.8) as usize;
-    let line_y = size.height / 2;
+    let line_width = (inner_rect.width as f64 * 0.8) as usize; // Use inner_rect.width
+    let line_y = inner_rect.y + inner_rect.height / 2; // Position relative to inner_rect.y
 
-    let mut line = vec![' '; size.width as usize];
-    let line_start = (size.width as usize - line_width) / 2;
+    let mut line = vec![' '; inner_rect.width as usize]; // Use inner_rect.width for line buffer
+    let line_start = (inner_rect.width as usize - line_width) / 2; // Relative to inner_rect
 
     for i in 0..line_width {
         line[line_start + i] = '─';
@@ -99,13 +101,13 @@ fn ui(f: &mut ratatui::Frame, app: &App) {
 
     if app.pulse_active {
         let pulse_x = line_start + (app.pulse_position * line_width as f64) as usize;
-        if pulse_x < size.width as usize {
+        if pulse_x < inner_rect.width as usize { // Check against inner_rect.width
             // Improved pulse effect
             let pulse_width = 4;
             for i in 0..pulse_width {
                 let pos = pulse_x + i;
-                if pos < size.width as usize {
-                    let intensity = 1.0 - ((app.pulse_position * line_width as f64) % 1.0);
+                if pos < inner_rect.width as usize { // Check against inner_rect.width
+                    let intensity = (app.pulse_position * PI).sin();
                     let character = match intensity {
                         x if x > 0.75 => '█',
                         x if x > 0.5 => '▓',
@@ -118,5 +120,5 @@ fn ui(f: &mut ratatui::Frame, app: &App) {
         }
     }
 
-    f.render_widget(Paragraph::new(line.into_iter().collect::<String>()), ratatui::layout::Rect::new(0, line_y, size.width, 1));
+    f.render_widget(Paragraph::new(line.into_iter().collect::<String>()), ratatui::layout::Rect::new(inner_rect.x, line_y, inner_rect.width, 1));
 }

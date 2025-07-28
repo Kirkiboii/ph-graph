@@ -1,1 +1,1 @@
-/Users/kote/Documents/ph-graph/test-2/target/debug/test-2: /Users/kote/Documents/ph-graph/test-2/src/main.rs
+/Users/kote/Documents/ph-graph/Pulsing\ line/target/debug/test-2: /Users/kote/Documents/ph-graph/Pulsing\ line/src/main.rs
