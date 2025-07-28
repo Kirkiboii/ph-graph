@@ -96,7 +96,7 @@ fn ui(f: &mut ratatui::Frame, app: &App) {
     let line_start = (inner_rect.width as usize - line_width) / 2; // Relative to inner_rect
 
     for i in 0..line_width {
-        line[line_start + i] = '─';
+        line[line_start + i] = '=';
     }
 
     if app.pulse_active {
@@ -115,14 +115,9 @@ fn ui(f: &mut ratatui::Frame, app: &App) {
                 let local_intensity = 1.0 - normalized_distance.powf(2.0); // Parabolic falloff
 
                 let overall_pulse_intensity = (app.pulse_position * PI).sin();
-                let character_intensity = overall_pulse_intensity * local_intensity;
+                let _character_intensity = overall_pulse_intensity * local_intensity;
 
-                let character = match character_intensity {
-                    x if x > 0.75 => '█',
-                    x if x > 0.5 => '▓',
-                    x if x > 0.25 => '▒',
-                    _ => '░',
-                };
+                let character = '#';
                 line[pos] = character;
             }
         }
