@@ -74,13 +74,13 @@ fn create_line(angle: f64, width: f64, height: f64) -> String {
     let length = width.min(height) / 2.0 * 0.8;
 
     for i in 0..=(length as i32) {
-        let x = center_x + (i as f64) * angle.cos();
+        let x = center_x + 2.0 * (i as f64) * angle.cos();
         let y = center_y + (i as f64) * angle.sin();
         if x >= 0.0 && x < width && y >= 0.0 && y < height {
             buffer[y as usize][x as usize] = '#';
         }
 
-        let x = center_x - (i as f64) * angle.cos();
+        let x = center_x - 2.0 * (i as f64) * angle.cos();
         let y = center_y - (i as f64) * angle.sin();
         if x >= 0.0 && x < width && y >= 0.0 && y < height {
             buffer[y as usize][x as usize] = '#';
