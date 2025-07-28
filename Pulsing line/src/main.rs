@@ -100,22 +100,30 @@ fn ui(f: &mut ratatui::Frame, app: &App) {
     }
 
     if app.pulse_active {
-        let pulse_x = line_start + (app.pulse_position * line_width as f64) as usize;
-        if pulse_x < inner_rect.width as usize { // Check against inner_rect.width
-            // Improved pulse effect
-            let pulse_width = 4;
-            for i in 0..pulse_width {
-                let pos = pulse_x + i;
-                if pos < inner_rect.width as usize { // Check against inner_rect.width
-                    let intensity = (app.pulse_position * PI).sin();
-                    let character = match intensity {
-                        x if x > 0.75 => '█',
-                        x if x > 0.5 => '▓',
-                        x if x > 0.25 => '▒',
-                        _ => '░',
-                    };
-                    line[pos] = character;
-                }
+        let pulse_center_x = line_start + (app.pulse_position * line_width as f64) as usize;
+        let max_blob_width = 10; // Maximum width of the blob
+        let current_blob_width = (app.pulse_position * PI).sin() * max_blob_width as f64;
+        let current_blob_width = current_blob_width.max(1.0); // Ensure minimum width of 1
+
+        let start_blob = (pulse_center_x as f64 - current_blob_width / 2.0).floor() as usize;
+        let end_blob = (pulse_center_x as f64 + current_blob_width / 2.0).ceil() as usize;
+
+        for pos in start_blob..end_blob {
+            if pos >= line_start && pos < line_start + line_width { // Ensure within the main line
+                let distance_from_center = (pos as f64 - pulse_center_x as f64).abs();
+                let normalized_distance = distance_from_center / (current_blob_width / 2.0);
+                let local_intensity = 1.0 - normalized_distance.powf(2.0); // Parabolic falloff
+
+                let overall_pulse_intensity = (app.pulse_position * PI).sin();
+                let character_intensity = overall_pulse_intensity * local_intensity;
+
+                let character = match character_intensity {
+                    x if x > 0.75 => '█',
+                    x if x > 0.5 => '▓',
+                    x if x > 0.25 => '▒',
+                    _ => '░',
+                };
+                line[pos] = character;
             }
         }
     }
