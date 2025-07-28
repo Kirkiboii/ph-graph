@@ -1,0 +1,7 @@
+/Users/kote/Documents/ph-graph/test-2/target/debug/deps/libscopeguard-6d9768152298df4c.rmeta: /Users/kote/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/scopeguard-1.2.0/src/lib.rs
+
+/Users/kote/Documents/ph-graph/test-2/target/debug/deps/libscopeguard-6d9768152298df4c.rlib: /Users/kote/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/scopeguard-1.2.0/src/lib.rs
+
+/Users/kote/Documents/ph-graph/test-2/target/debug/deps/scopeguard-6d9768152298df4c.d: /Users/kote/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/scopeguard-1.2.0/src/lib.rs
+
+/Users/kote/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/scopeguard-1.2.0/src/lib.rs:
