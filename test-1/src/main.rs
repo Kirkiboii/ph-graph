@@ -71,7 +71,7 @@ fn create_line(angle: f64, width: f64, height: f64) -> String {
     let mut buffer = vec![vec![' '; width as usize]; height as usize];
     let center_x = width / 2.0;
     let center_y = height / 2.0;
-    let length = width.min(height) / 2.0 * 0.8;
+    let length = (width / 6.0) * 0.8;
 
     for i in 0..=(length as i32) {
         let x = center_x + 2.0 * (i as f64) * angle.cos();
